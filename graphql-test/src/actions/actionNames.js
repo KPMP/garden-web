@@ -1,5 +1,6 @@
 const actionNames = {
-  RESET_STATE: 'RESET_STATE',
+	SET_PETS: 'SET_PETS',
+	RESET_STATE: 'RESET_STATE',
 };
 
 export default actionNames;

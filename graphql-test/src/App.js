@@ -9,7 +9,7 @@ import thunk from 'redux-thunk';
 import ReactGA from 'react-ga';
 import createHistory from 'history/createBrowserHistory';
 import { Router } from 'react-router-dom';
-import PetList from './components/PetList';
+import PetListContainer from './components/PetListContainer';
 
 const cacheStore = window.sessionStorage.getItem("redux-store");
 const initialState = cacheStore ?
@@ -54,7 +54,7 @@ class App extends Component {
 						<div id="main-page">
 							<Row>
 								<Col>
-									<PetList />
+									<PetListContainer />
 								</Col>
 							</Row>
 						</div>
