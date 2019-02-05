@@ -62,7 +62,6 @@ class App extends Component {
 
 	getTasksClick = () => {
 		let allTasks = this.callApi("http://localhost:8080/tasks", "GET");
-		console.log(allTasks);
 		this.setState({allTasks: allTasks});
 	};
 
@@ -116,8 +115,8 @@ class App extends Component {
 
 	componentWillMount() {
 		localStorage.clear();
-	}	
-	
+	}
+
 	render() {
 		return (
 			<Provider store={store}>
