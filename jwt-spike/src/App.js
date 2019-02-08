@@ -54,7 +54,7 @@ class App extends Component {
 	}
 
 	loginClick = () => {
-		window.location.href = "https://qa-demo.kpmp.org/api/login?redirect=http://localhost:3000";
+		window.location.href = "https://qa-demo.kpmp.org/api/login?redirect=http://qa-demo.kpmp.org";
 	};
 
 	addTaskClick = () => {
@@ -82,7 +82,7 @@ class App extends Component {
 				.then(response => response.json().then(data => ({data, response})))
 				.then(({ data, response }) => {
 					if (!response.ok) {
-						return Promise.reject(data)
+						return false;
 					} else {
 						localStorage.setItem('access_token', data.token);
 						this.setState({token: data.token});
