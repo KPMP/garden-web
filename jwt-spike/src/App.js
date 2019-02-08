@@ -48,12 +48,13 @@ class App extends Component {
 				password: "password"
 			},
 			allTasks: [],
-			token: null
+			token: null,
+			authenticated: false
 		};
 	}
 
 	loginClick = () => {
-		this.getJWT(this.state.userData);
+		window.location.href = "https://qa-demo.kpmp.org/api/login?redirect=http://localhost:3000";
 	};
 
 	addTaskClick = () => {
@@ -64,6 +65,32 @@ class App extends Component {
 		let allTasks = this.callApi("http://localhost:8080/tasks", "GET");
 		this.setState({allTasks: allTasks});
 	};
+
+	checkAuth() {
+
+		let config = {
+			method: 'GET',
+			crossDomain:true,
+			mode: 'cors'
+		};
+
+		if (this.state.token !== null) {
+			return true;
+		}
+		else {
+			fetch('https://qa-demo.kpmp.org/api/auth', config)
+				.then(response => response.json().then(data => ({data, response})))
+				.then(({ data, response }) => {
+					if (!response.ok) {
+						return Promise.reject(data)
+					} else {
+						localStorage.setItem('access_token', data.token);
+						this.setState({token: data.token});
+						return true;
+					}
+				}).catch(err => console.log("Error: ", err));
+		}
+	}
 
 	getJWT(userData) {
 		let config = {
@@ -115,6 +142,7 @@ class App extends Component {
 
 	componentWillMount() {
 		localStorage.clear();
+		this.setState({authenticated: this.checkAuth()});
 	}
 
 	render() {
@@ -126,6 +154,7 @@ class App extends Component {
 						<div id="main-page">
 							<Button onClick={this.loginClick}>Login</Button>
 							<div>Your JWT is: {localStorage.getItem("access_token")} </div>
+							{this.state.authenticated ? <div>You are authenticated!</div> : <div>You are NOT authenticated</div>}
 							<Button onClick={this.addTaskClick}>Add task</Button>
 							<Button onClick={this.getTasksClick}>Get tasks</Button>
 							<div>Tasks: {JSON.stringify(this.state.allTasks)}</div>
