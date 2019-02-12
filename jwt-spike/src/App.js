@@ -9,6 +9,7 @@ import thunk from 'redux-thunk';
 import ReactGA from 'react-ga';
 import createHistory from 'history/createBrowserHistory';
 import { Router } from 'react-router-dom';
+import QueryString from 'query-string';
 
 const cacheStore = window.sessionStorage.getItem("redux-store");
 const initialState = cacheStore ?
@@ -43,30 +44,26 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			userData: {
-				username: "admin" + Math.floor(Math.random() * 1000),
-				password: "password"
-			},
-			allTasks: [],
-			token: null,
-			authenticated: false
+			token: null
 		};
 	}
 
 	loginClick = () => {
-		window.location.href = "https://qa-demo.kpmp.org/api/login?redirect=http://qa-demo.kpmp.org";
+		window.location.href = "https://qa-demo.kpmp.org/api/login?redirect=http://localhost:3000";
 	};
 
-	addTaskClick = () => {
-		this.callApi("http://localhost:8080/tasks", "POST", {description: "create JWT spike"});
-	};
-
-	getTasksClick = () => {
-		let allTasks = this.callApi("http://localhost:8080/tasks", "GET");
-		this.setState({allTasks: allTasks});
-	};
 
 	checkAuth() {
+
+		let token = null;
+		let query = QueryString.parse(window.location.search);
+
+		if (typeof query.token !== 'undefined') {
+			token = query.token;
+		}
+		else if (this.state.token !== null) {
+			token = this.state.token;
+		}
 
 		let config = {
 			method: 'GET',
@@ -74,78 +71,28 @@ class App extends Component {
 			mode: 'cors'
 		};
 
-		if (this.state.token !== null) {
-			return true;
-		}
-		else {
-			fetch('https://qa-demo.kpmp.org/api/auth', config)
+		if (token !== null) {
+			fetch('https://qa-demo.kpmp.org/api/auth?token=' + token, config)
 				.then(response => response.json().then(data => ({data, response})))
 				.then(({ data, response }) => {
 					if (!response.ok) {
-						return false;
+						return Promise.reject(data)
 					} else {
-						localStorage.setItem('access_token', data.token);
 						this.setState({token: data.token});
 						return true;
 					}
 				}).catch(err => console.log("Error: ", err));
+		} else {
+			return false;
 		}
-	}
-
-	getJWT(userData) {
-		let config = {
-			method: 'POST',
-			headers: { 'Content-Type':'application/json' },
-			body: JSON.stringify(userData)
-		};
-
-		fetch('http://localhost:8080/users/sign-up', config)
-			.then(() => fetch('http://localhost:8080/login', config))
-			.then(response => response.json().then(user => ({user, response}))
-		).then(({ user, response }) => {
-				if (!response.ok) {
-					return Promise.reject(user)
-				} else {
-					localStorage.setItem('access_token', user.token);
-					this.setState({token: user.token})
-				}
-			}).catch(err => console.log("Error: ", err));
-	}
-
-	callApi(endpoint, method, data = null) {
-
-		let token = localStorage.getItem('access_token') || null;
-		let config = {};
-
-		config = {
-			method: method,
-			headers: {
-				'Authorization': `Bearer ${token}`,
-				'Content-Type': 'application/json'
-			}
-		};
-		if (method === 'POST') {
-			config.body = JSON.stringify(data)
-		}
-
-		let resData = fetch(endpoint, config)
-			.then(response => response.json().then(resData => ({resData, response}))
-		).then(({ resData, response }) => {
-				if (!response.ok) {
-					return Promise.reject(resData)
-				} else {
-					this.setState({allTasks: resData});
-				}
-			}).catch(err => console.log("Error: ", err))
-		return resData;
 	}
 
 	componentWillMount() {
-		localStorage.clear();
-		this.setState({authenticated: this.checkAuth()});
+		let authState = this.checkAuth();
 	}
 
 	render() {
+		console.log(this.state)
 		return (
 			<Provider store={store}>
 				<Router history={history}>
@@ -153,11 +100,8 @@ class App extends Component {
 						<NavBar/>
 						<div id="main-page">
 							<Button onClick={this.loginClick}>Login</Button>
-							<div>Your JWT is: {localStorage.getItem("access_token")} </div>
-							{this.state.authenticated ? <div>You are authenticated!</div> : <div>You are NOT authenticated</div>}
-							<Button onClick={this.addTaskClick}>Add task</Button>
-							<Button onClick={this.getTasksClick}>Get tasks</Button>
-							<div>Tasks: {JSON.stringify(this.state.allTasks)}</div>
+							<div>Your JWT is: {this.state.token} </div>
+							{this.state.token !== null ? <div>You are authenticated!</div> : <div>You are NOT authenticated.</div>}
 						</div>
 					</Container>
 				</Router>

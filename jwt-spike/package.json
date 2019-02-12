@@ -6,6 +6,7 @@
     "bootstrap-css-only": "^4.2.1",
     "history": "^4.7.2",
     "kpmp-custom-react-scripts": "0.0.44",
+    "query-string": "^5.1.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-ga": "^2.5.6",
