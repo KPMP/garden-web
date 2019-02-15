@@ -72,22 +72,19 @@ class App extends Component {
 			body: JSON.stringify({token: token})
 		};
 
-		//if (token !== null) {
-			fetch('https://qa-demo.kpmp.org/api/auth', config)
-				.then(response => response.json().then(data => ({data, response})))
-				.then(({ data, response }) => {
-					if (!response.ok) {
-						return Promise.reject(data)
-					} else {
-						localStorage.setItem("token", data.token);
-						this.setState({token: data.token});
-						return true;
-					}
-				}).catch(err => console.log("Error: ", err));
-		//} else {
-		//	return false;
-		//}
+		fetch('https://qa-demo.kpmp.org/api/auth', config)
+			.then(response => response.json().then(data => ({data, response})))
+			.then(({ data, response }) => {
+				if (!response.ok) {
+					return Promise.reject(data)
+				} else {
+					localStorage.setItem("token", data.token);
+					this.setState({token: data.token});
+					return true;
+				}
+			}).catch(err => console.log("Error: ", err));
 	}
+
 
 	componentWillMount() {
 		let authState = this.checkAuth();
