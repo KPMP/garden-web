@@ -56,35 +56,37 @@ class App extends Component {
 	checkAuth() {
 
 		let token = null;
-		let query = QueryString.parse(window.location.search);
 
-		if (typeof query.token !== 'undefined') {
-			token = query.token;
-		}
-		else if (this.state.token !== null) {
-			token = this.state.token;
+		console.log(localStorage.getItem("token"))
+
+		if (localStorage.getItem("token") !== null) {
+			token = localStorage.getItem("token")
 		}
 
 		let config = {
-			method: 'GET',
-			crossDomain:true,
-			mode: 'cors'
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({token: token})
 		};
 
-		if (token !== null) {
-			fetch('https://qa-demo.kpmp.org/api/auth?token=' + token, config)
+		//if (token !== null) {
+			fetch('https://qa-demo.kpmp.org/api/auth', config)
 				.then(response => response.json().then(data => ({data, response})))
 				.then(({ data, response }) => {
 					if (!response.ok) {
 						return Promise.reject(data)
 					} else {
+						localStorage.setItem("token", data.token);
 						this.setState({token: data.token});
 						return true;
 					}
 				}).catch(err => console.log("Error: ", err));
-		} else {
-			return false;
-		}
+		//} else {
+		//	return false;
+		//}
 	}
 
 	componentWillMount() {
@@ -92,7 +94,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log(this.state)
 		return (
 			<Provider store={store}>
 				<Router history={history}>
@@ -101,7 +102,7 @@ class App extends Component {
 						<div id="main-page">
 							<Button onClick={this.loginClick}>Login</Button>
 							<div>Your JWT is: {this.state.token} </div>
-							{this.state.token !== null ? <div>You are authenticated!</div> : <div>You are NOT authenticated.</div>}
+							{this.state.token !== null ? <div>You are authenticated!</div> : <div>You are NOT authenticated. Better click login.</div>}
 						</div>
 					</Container>
 				</Router>
