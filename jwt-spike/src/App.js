@@ -49,7 +49,7 @@ class App extends Component {
 	}
 
 	loginClick = () => {
-		window.location.href = "https://qa-demo.kpmp.org/api/login?redirect=http://localhost:3000";
+		window.location.href = "https://dev-demo.kpmp.org/api/login?redirect=http://localhost:3000";
 	};
 
 
@@ -72,7 +72,7 @@ class App extends Component {
 			body: JSON.stringify({token: token})
 		};
 
-		fetch('https://qa-demo.kpmp.org/api/auth', config)
+		fetch('https://dev-demo.kpmp.org/api/auth', config)
 			.then(response => response.json().then(data => ({data, response})))
 			.then(({ data, response }) => {
 				if (!response.ok) {
