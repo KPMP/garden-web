@@ -1,0 +1,18 @@
+curl -X PUT "localhost:9200/search_keyword?pretty" -H 'Content-Type: application/json' --user elastic:myelasticpassword -d'
+{
+    "settings" : {
+        "number_of_shards" : 1
+    },
+   "mappings": { 
+   		"properties": { 
+			"keyword": { "type": "keyword" }, 
+			"bio_data_id": { "type": "keyword" }, 
+			"unique_id": { "type": "keyword" }, 
+			"search_keyword_id": { "type": "keyword" }, 
+			"data_category": { "type": "keyword" }, 
+			"source_code": { "type": "keyword" }, 
+			"display_data_category": { "type": "keyword" }
+		}	
+	}
+}
+'
