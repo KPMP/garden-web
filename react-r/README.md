@@ -11,10 +11,10 @@ docker-compose up
 ```
 
 # Endpoints
-http://localhost:5000/umap_gene/[gene_symbol]
-http://localhost:5000/umap
-http://localhost:5000add_five/[number]
-http://localhost:5000/test_plot_jpg
-http://localhost:5000/test_plot_pdf
+- http://localhost:5000/umap_gene/[gene_symbol]
+- http://localhost:5000/umap
+- http://localhost:5000add_five/[number]
+- http://localhost:5000/test_plot_jpg
+- http://localhost:5000/test_plot_pdf
 
 
