@@ -1,0 +1,12 @@
+dist
+node_modules
+lerna-debug.log
+.DS_Store
+_build
+
+# remove this in beta
+yarn.lock
+
+integration-tests/ui
+.vscode
+

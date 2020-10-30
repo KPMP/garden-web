@@ -1,0 +1,72 @@
+{
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/overture-stack/arranger.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "watch": "npm run bootstrap && npm run lerna -- run --parallel watch",
+    "bootstrap": "lerna bootstrap --hoist",
+    "lerna": "lerna",
+    "link": "npm-link-shared modules",
+    "publish::ci": "lerna publish from-git --yes --force-publish=*",
+    "test": "lerna run test --stream",
+    "server": "cd modules/server && npm run watch",
+    "run-prod-server": "cd modules/server && npm run run-prod",
+    "storybook": "cd modules/components && npm run storybook",
+    "dashboard": "cd modules/components && npm run dashboard",
+    "portal": "cd modules/components && npm run portal",
+    "netlify-build": "npm i && npm run bootstrap -- --scope=@arranger/components --include-filtered-dependencies && cd modules/components && npm run build-storybook",
+    "tag": "lerna version --force-publish --yes"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@types/express": "^4.16.0",
+    "@types/graphql": "^14.0.0",
+    "@types/jest": "^23.3.9",
+    "@types/jwt-decode": "^2.2.1",
+    "@types/node": "^10.12.2",
+    "@types/ramda": "^0.25.42",
+    "@types/react": "^16.7.7",
+    "@types/react-dom": "^16.0.9",
+    "@types/react-redux": "^6.0.9",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-table": "^6.7.14",
+    "@types/recompose": "^0.27.0",
+    "@types/redux-devtools": "^3.0.44",
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.1.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.42.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.6.1",
+    "husky": "^4.3.0",
+    "jest": "^22.3.0",
+    "lerna": "^3.20.2",
+    "node-sass": "4.13.0",
+    "npm-link-shared": "^0.5.3",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.0.2",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "kind-of": "^6.0.3",
+    "minimist": "^1.2.5"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "all",
+    "singleQuote": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}

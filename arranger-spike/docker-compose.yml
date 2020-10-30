@@ -1,0 +1,100 @@
+version: "3.7"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      discovery.type: single-node
+      cluster.name: workflow.elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx2048m
+      ELASTIC_PASSWORD: 'myelasticpassword'
+      xpack.security.enabled: 'true'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '10'
+    healthcheck:
+      test: 'curl --silent --fail localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s || exit 1'
+      interval: 1m30s
+      timeout: 50s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.5.0
+    ports:
+      - 5601:5601
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '10'
+    depends_on:
+      - elasticsearch
+    environment:
+      LOGGING_QUIET: 'true'
+      ELASTICSEARCH_USERNAME: 'elastic'
+      ELASTICSEARCH_PASSWORD: 'myelasticpassword'
+
+  arranger-server:
+    build:
+      context: ./
+      target: server
+      dockerfile: Dockerfile
+    container_name: arranger-server.local
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5050:5050
+    environment:
+      ES_HOST: http://elasticsearch:9200
+      ES_USER: "elastic"
+      ES_PASS: "myelasticpassword"
+
+  arranger-ui:
+    build:
+      context: ./
+      target: ui
+      dockerfile: Dockerfile
+    hostname: arranger-ui.local
+    container_name: arranger-ui.local
+    depends_on:
+      - arranger-server
+    environment:
+      REACT_APP_ARRANGER_ADMIN_ROOT: "http://arranger-server:5050"
+      PORT: 3000
+    ports:
+      - 8080:3000
+      
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: arrangerdb
+    volumes:
+      - mariadbdata:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      local:
+        aliases:
+          - mariadb
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9090:8080
+    networks:
+      local:
+        aliases:
+          - adminer
+
+networks:
+  local:
+          
+volumes:
+  mariadbdata:
