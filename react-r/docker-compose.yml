@@ -1,0 +1,55 @@
+---
+version: "3.5"
+
+networks:
+  local:
+
+services:
+  rserve:
+    build:
+      context: ./rserve-docker
+    image: rserve
+    ports:
+      - "6311:6311"
+    volumes:
+      - r-output:/opt/rserve/work     
+    networks:
+      local:
+        aliases:
+        - rserve
+
+  apache:
+    container_name: apache
+    image: kingstonduo/apache:apache-basic
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${ENV_REACT_APP}/build:/var/www/html
+      - r-output:/r-output
+      - ${ENV_APACHE_CONF}:/etc/httpd/conf.d/rjobs.conf        
+    networks:
+      local:
+        aliases:
+          - apache
+
+      
+  flask-r-service:
+    build: ./flask-docker
+    image: flask-r
+    ports:
+      - "5000:5000"
+    volumes:
+      - ${ENV_FLASK_HOME}:/code
+      - r-output:/r-output
+    depends_on:
+      - rserve
+    environment:
+      - FLASK_ENV=production
+    networks:
+      local:
+        aliases:
+          - flask-r-service
+          
+volumes:
+     r-output:           
