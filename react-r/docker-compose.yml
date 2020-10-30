@@ -12,7 +12,8 @@ services:
     ports:
       - "6311:6311"
     volumes:
-      - r-output:/opt/rserve/work     
+      - r-output:/opt/rserve/work
+      - ${ENV_RSERVE_DATA}:/opt/rserve/data
     networks:
       local:
         aliases:

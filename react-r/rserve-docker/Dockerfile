@@ -29,8 +29,6 @@ RUN useradd rserve \
 
 COPY etc ${RSERVE_HOME}/etc
 
-COPY data ${RSERVE_HOME}/data
-
 RUN chown -R rserve:rserve ${RSERVE_HOME}
 
 COPY run_rserve.sh ${RSERVE_HOME}/bin/
