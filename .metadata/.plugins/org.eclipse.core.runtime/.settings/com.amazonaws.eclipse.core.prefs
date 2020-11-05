@@ -1,0 +1,9 @@
+9512fc32-3b3c-45f6-97fe-6aff7df366ac\:credentialProfileName=default
+cognitoIdentityId=us-east-1\:c7a38bda-6215-4965-b693-8ff4932b8d4d
+cognitoIdentityPoolId=us-east-1\:d4fdc07f-94fd-4cc6-94fb-f903657f05c1
+credentialProfileAccountIds=9512fc32-3b3c-45f6-97fe-6aff7df366ac|edfcfe03-3dd7-45bf-b195-5e8848d2872e
+currentAccount=9512fc32-3b3c-45f6-97fe-6aff7df366ac
+currentDefaultAccount=
+ec2PreferencesImported=true
+eclipse.preferences.version=1
+edfcfe03-3dd7-45bf-b195-5e8848d2872e\:credentialProfileName=kpmp
