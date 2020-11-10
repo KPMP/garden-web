@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import UpsetTest from './UpsetTest.js'
 import React from "react";
 import UpSetJS, { extractSets, generateCombinations, ISetLike } from '@upsetjs/react';
 
