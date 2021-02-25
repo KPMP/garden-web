@@ -7,7 +7,7 @@
     "bootstrap-css-only": "^4.2.1",
     "history": "^4.7.2",
     "kpmp-custom-react-scripts": "0.1.0",
-    "papaparse": "^4.6.3",
+    "papaparse": "^5.2.0",
     "plotly.js": "^1.45.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
