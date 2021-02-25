@@ -32,7 +32,7 @@
     "react-dom": "^15.5.4",
     "react-relay": "^1.0.0",
     "webpack": "1.13.2",
-    "webpack-dev-server": "1.16.1",
+    "webpack-dev-server": "3.1.11",
     "whatwg-fetch": "^2.0.3"
   }
 }
