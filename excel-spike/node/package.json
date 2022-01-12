@@ -1,0 +1,11 @@
+{
+    "name": "excel-spike",
+    "version": "1.0.0",
+    "author": "Alex Barkell albarkel@umich.edu",
+    "license": "MIT",
+    "devDependencies": {},
+    "peerDependencies": {},
+    "dependencies": {
+        "xlsx": "^0.17.4"
+    }
+}
