@@ -22,20 +22,24 @@ class App extends Component {
   setData = ( results ) => {
     let xaxis = [];
     let yaxis = [];
+    let cluster = [];
     results.data.map(function(line) {
-      
       xaxis.push(line.tSNE_1);
       yaxis.push(line.tSNE_2);
+      cluster.push(line.cluster)
     });
     let data = [{
       type: 'scatter',
       mode: 'markers',
       x: xaxis,
       y: yaxis,
+      color: cluster,
       marker: { coloer: 'red'}
     }];
     this.setState({plotData: data});
   }
+
+  tran
 
   render() {
     return (
