@@ -8,11 +8,11 @@ services:
     ports:
       - 3002:3002
     environment:
-      secret_management.encryption_keys: '[2f983d978dfb257aaa0586ea2fae8f2c60feac14c34bb6cb3ef2af355dce1192]'
+      secret_management.encryption_keys: 
       allow_es_settings_modification: 'true'
       elasticsearch.host: https://10.12.0.2:9200
       elasticsearch.username: elastic
-      elasticsearch.password: exLUqEk9Ex39WBnF 
+      elasticsearch.password: 
       elasticsearch.ssl.enabled: 'true'
       elasticsearch.ssl.certificate_authority: /usr/share/enterprise-search/es-config/certs/http_ca.crt
       kibana.external_url: http://kibana:5601
