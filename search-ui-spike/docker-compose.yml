@@ -1,0 +1,116 @@
+version: "3.5"
+services:      
+
+  enterprise-search:
+    image: docker.elastic.co/enterprise-search/enterprise-search:8.0.0
+    volumes:
+      - es-config:/usr/share/enterprise-search/es-config
+    ports:
+      - 3002:3002
+    environment:
+      secret_management.encryption_keys: '[2f983d978dfb257aaa0586ea2fae8f2c60feac14c34bb6cb3ef2af355dce1192]'
+      allow_es_settings_modification: 'true'
+      elasticsearch.host: https://10.12.0.2:9200
+      elasticsearch.username: elastic
+      elasticsearch.password: exLUqEk9Ex39WBnF 
+      elasticsearch.ssl.enabled: 'true'
+      elasticsearch.ssl.certificate_authority: /usr/share/enterprise-search/es-config/certs/http_ca.crt
+      kibana.external_url: http://kibana:5601
+    networks:
+      local:
+        aliases:
+          - enterprise-search
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ENV_MARIADB_ROOT_PWD}
+    volumes:
+      - mariadbdata:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      local:
+        aliases:
+          - mariadb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - "TZ=America/Detroit"
+    ports:
+      - 9090:8080
+    networks:
+      local:
+        aliases:
+          - adminer    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+    container_name: es01
+    ports:
+      - 9200:9200
+    volumes:
+      - es-config:/usr/share/elasticsearch/config
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+    logging:
+      driver: "json-file"
+    networks:
+      local:
+        aliases:
+          - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.0.0
+    ports:
+      - 5601:5601
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+    depends_on:
+      - es01
+    environment:
+      LOGGING_QUIET: "true"
+      TZ: "America/Detroit"
+      ENTERPRISESEARCH_HOST: http://enterprise-search:3002
+    networks:
+      local:
+        aliases:
+          - kibana
+          
+volumes:
+  esdata01:
+    driver: local
+  es-config:
+    driver: local
+  mariadbdata:
+
+networks:
+  local:
+    name: dataPortal2
+    ipam:
+      driver: default
+      config:
+        - 
+          subnet: 10.12.0.0/16
+
+
+
